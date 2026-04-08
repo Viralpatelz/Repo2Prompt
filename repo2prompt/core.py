@@ -20,6 +20,7 @@ DEFAULT_IGNORES = [
 
 def get_token_count(text):
     if not HAS_TIKTOKEN:
+        print("WARNING: tiktoken is not installed. Using a rough heuristic for token counting which may cause chunking issues.")
         return len(text) // 4  # Very rough fallback heuristic
     enc = tiktoken.get_encoding("cl100k_base")
     return len(enc.encode(text, disallowed_special=()))
@@ -43,7 +44,7 @@ def get_ignore_spec(directory):
                 ignore_patterns.extend(f.read().splitlines())
         except Exception as e:
             pass
-    return pathspec.PathSpec.from_lines(pathspec.patterns.GitWildMatchPattern, ignore_patterns)
+    return pathspec.PathSpec.from_lines('gitignore', ignore_patterns)
 
 def rank_files(file_list):
     """
@@ -85,7 +86,11 @@ def process_repository(directory, max_tokens_per_chunk=100000, mode="explain"):
         rel_root = os.path.relpath(root, base_dir)
         if rel_root == ".": rel_root = ""
             
-        dirs[:] = [d for d in dirs if not spec.match_file(os.path.join(rel_root, d) + "/")]
+        # Normalize to forward slashes for pathspec compatibility, particularly on Windows
+        normalized_rel_root = rel_root.replace(os.sep, "/")
+        
+        # Filter directories
+        dirs[:] = [d for d in dirs if not spec.match_file((normalized_rel_root + "/" + d + "/") if normalized_rel_root else (d + "/"))]
         
         indent = "  " * (rel_root.count(os.sep) + 1 if rel_root else 0)
         if rel_root:
@@ -95,7 +100,8 @@ def process_repository(directory, max_tokens_per_chunk=100000, mode="explain"):
         
         for file in sorted(files):
             rel_file = os.path.join(rel_root, file)
-            if spec.match_file(rel_file): continue
+            normalized_rel_file = rel_file.replace(os.sep, "/")
+            if spec.match_file(normalized_rel_file): continue
                 
             file_path = os.path.join(root, file)
             if os.path.islink(file_path): continue

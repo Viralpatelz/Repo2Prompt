@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     description="A lightweight CLI tool to convert GitHub repositories and local directories into LLM context prompts.",
     author="Viral",
-    url="https://github.com/yourusername/repo2prompt",
+    url="https://github.com/Viralpatelz/Repo2Prompt",
     packages=find_packages(),
     install_requires=[
         "pathspec>=0.12.0",
