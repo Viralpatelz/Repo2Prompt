@@ -22,7 +22,7 @@ Context windows are huge now (Claude 3 has 200k, Gemini has 1M+). We all want to
 Clone this repository and install using pip:
 
 ```bash
-git clone https://github.com/yourusername/repo2prompt.git
+git clone https://github.com/Viralpatelz/Repo2Prompt.git
 cd repo2prompt
 pip install -e .
 ```
@@ -67,3 +67,15 @@ Simply drag the output file into:
 - Google AI Studio (Gemini 1.5 Pro)
 
 *Built by Viral as part of the weekly AI tooling initiative.*
+
+## 📝 Changelog
+
+### v0.1.1 (Current)
+- **Token-Aware Chunking**: Added `tiktoken` to split massive projects into smaller files (`context_part1.txt`, `context_part2.txt`) if they exceed token limits.
+- **Smart Ranking Heuristics**: Project `README.md` and core entry points (`main.py`, `index.js`) are now intelligently forced to the top of the LLM context.
+- **Windows Path Normalization Fix**: Resolved a critical `.gitignore` evaluation bug where Windows backslashes (`\`) bypassed the POSIX-only `pathspec` matchers.
+- **Graceful Degradation**: Added intelligent fallback heuristics and warnings if `tiktoken` is not installed.
+- **Test-Driven Foundation**: Automated testing matrix established in the `tests/` directory ensuring file-ranking, token algorithms, and path parsing remain solid.
+
+### v0.1.0 
+- Initial release featuring local repository extraction, `.gitignore` awareness, GitHub cloning, and AST-like directory mapping.
