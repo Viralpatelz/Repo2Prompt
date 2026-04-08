@@ -1,0 +1,14 @@
+context_part*.txt
+context.txt
+output.txt
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+build/
+dist/
+.idea/
+.vscode/
